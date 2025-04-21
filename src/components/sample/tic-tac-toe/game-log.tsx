@@ -5,7 +5,7 @@ type Props = { gameTurn: Turn[] };
 const GameLog = (props: Props) => {
   const gameTurnLog = props.gameTurn.map((turn, index) => {
     return (
-      <li key={index}>
+      <li key={index.valueOf()}>
         player
         {turn.player}
         {' '}

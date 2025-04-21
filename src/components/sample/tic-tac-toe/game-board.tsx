@@ -40,10 +40,10 @@ const GameBoard = (prop: Props) => {
   return (
     <ol id="game-board">
       {prop.board.map((row, rowIndex) => (
-        <li key={rowIndex}>
+        <li key={rowIndex.valueOf()}>
           <ol>
             {row.map((playerSymbol, cellIndex) => (
-              <li key={cellIndex}>
+              <li key={cellIndex.valueOf()}>
                 <button type="button" onClick={() => prop.onSelectSquare(rowIndex, cellIndex)} disabled={playerSymbol !== null}>{playerSymbol}</button>
               </li>
             ))}
