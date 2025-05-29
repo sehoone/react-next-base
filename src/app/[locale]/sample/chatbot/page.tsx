@@ -11,6 +11,7 @@ type ChatMessage = {
 const genId = () => Math.random().toString(36).slice(2) + Date.now();
 
 export default function Page() {
+  // 챗봇 메시지 관련 state
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => [
     { id: genId(), from: 'bot', text: '안녕하세요! 무엇을 도와드릴까요?' },
   ]);
@@ -27,21 +28,30 @@ export default function Page() {
   }, [chatMessages]);
 
   useEffect(() => {
+    // 챗봇 iframe 초기화완료 메시지 전송
     chatbotIframeBridge.sendMessageToParent(
       createIframeMessage({
         type: 'init',
       }),
-      'http://localhost:8080', // 부모 origin(환경변수로 환경별 설정 필요)
+      'http://localhost:8080', // TODO 부모 origin(환경변수로 환경별 설정 필요)
     );
+
     // 부모로부터 메시지 받기
     chatbotIframeBridge.listenMessageFromParent((data) => {
-      // (`부모 메시지: ${JSON.stringify(data)}`);
-      console.warn(`부모 메시지11: ${JSON.stringify(data)}`);
+      // 메세지를 type에 따라 처리
+      if (data.type === 'inputHelloButton') {
+        // setShowToast(true);
+        // const timeoutId = setTimeout(() => setShowToast(false), 2500);
+        // return () => clearTimeout(timeoutId);
+      } else if (data.type === 'keepalive') {
+        // 부모로부터 keepalive 메시지 수신 시 처리
+        // TODO 세션유지를 위한것이므로 chatui는 해당 이벤트를 받으면 keepalive API 호출
+      }
       setToastMsg(JSON.stringify(data));
       setShowToast(true);
-      const timeoutId = setTimeout(() => setShowToast(false), 2500);
+      const timeoutId = setTimeout(() => setShowToast(false), 2000);
       return () => clearTimeout(timeoutId);
-    }, 'http://localhost:8080'); // 부모 origin(환경변수로 환경별 설정 필요)
+    }, 'http://localhost:8080'); // TODO 부모 origin(환경변수로 환경별 설정 필요)
   }, []);
 
   const handleSend = () => {
@@ -51,14 +61,19 @@ export default function Page() {
 
     const userMsg: ChatMessage = { id: genId(), from: 'user', text: input };
 
+    // 부모 iframe에 메시지 전송
     chatbotIframeBridge.sendMessageToParent(
       createIframeMessage({
-        type: 'sample1',
+        type: 'inputChatMessage',
         payload: { text: input },
       }),
-      'http://localhost:8080', // 부모 origin(환경변수로 환경별 설정 필요)
+      'http://localhost:8080', // TODO 부모 origin(환경변수로 환경별 설정 필요)
     );
+
+    // 챗 메시지 상태 업데이트
     setChatMessages(prev => [...prev, userMsg]);
+
+    // 봇 응답 시뮬레이션
     setTimeout(() => {
       setChatMessages(prev => [
         ...prev,
