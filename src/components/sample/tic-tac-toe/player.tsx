@@ -1,6 +1,6 @@
+import { useState } from 'react';
 
-import { useState } from 'react'
-type Props = { name: string, symbol: string, isActive: boolean, onChangeName: (symbol: string, playerName: string) => void }
+type Props = { name: string; symbol: string; isActive: boolean; onChangeName: (symbol: string, playerName: string) => void };
 
 const Player = (props: Props) => {
   const [playerName, setPlayerName] = useState(props.name);
@@ -14,28 +14,28 @@ const Player = (props: Props) => {
     // 함수형 업데이트: 비동기적으로 이루어질 때 더 안전(즉시실행). 여러 번 상태 업데이트가 발생하더라도 항상 최신 상태 값을 기반으로 새로운 상태 값을 계산
     setIsEditing(editing => !editing);
     props.onChangeName(props.symbol, playerName);
-  }
+  };
 
   const handleChangePlayerName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPlayerName(event.target.value);
-  }
+  };
 
-  let playerElement = <span className='player-name'>{playerName}</span>;
+  let playerElement = <span className="player-name">{playerName}</span>;
 
   if (isEditing) {
-    playerElement = <input type='text' required value={playerName} onChange={handleChangePlayerName} />;
+    playerElement = <input type="text" required value={playerName} onChange={handleChangePlayerName} />;
   }
 
   return (
     <li className={props.isActive ? 'active' : undefined}>
-      <span className='player'>
+      <span className="player">
         {playerElement}
-        <span className='player-symbol'>{props.symbol}</span>
+        <span className="player-symbol">{props.symbol}</span>
       </span>
-      <button onClick={handleEditClick}>{isEditing ? 'save' : 'edit'}</button>
+      <button type="button" onClick={handleEditClick}>{isEditing ? 'save' : 'edit'}</button>
 
     </li>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;

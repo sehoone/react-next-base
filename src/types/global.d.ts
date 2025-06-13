@@ -1,8 +1,5 @@
-export {};
+// Use type safe message keys with `next-intl`
+type Messages = typeof import('../locales/en.json');
 
-declare global {
-  interface Window {
-    // 외부라이브러리 함수 호출을 위한 타입 정의
-    callExtraLib: () => void;
-  }
-}
+// eslint-disable-next-line
+declare interface IntlMessages extends Messages {}
